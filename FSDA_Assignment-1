@@ -1,0 +1,83 @@
+--TASK-1
+
+create table shopping_history
+(product varchar not null,
+quantity integer not null,
+unit_price integer not null);
+
+insert into shopping_history (product,quality,unit_price) values ('milk',4,50);
+insert into shopping_history (product,quality,unit_price) values ('bread',2,40);
+insert into shopping_history (product,quality,unit_price) values ('apple',10,10);
+insert into shopping_history (product,quality,unit_price) values ('shirt',3,500);
+insert into shopping_history (product,quality,unit_price) values ('bread',3,100);
+insert into shopping_history (product,quality,unit_price) values ('vegetables',5,100);
+insert into shopping_history (product,quality,unit_price) values ('shoes',2,1200);
+insert into shopping_history (product,quality,unit_price) values ('books',6,450);
+insert into shopping_history (product,quality,unit_price) values ('bag',2,700);
+insert into shopping_history (product,quality,unit_price) values ('pen',2,50);
+
+select product, quantity * unit_price as total_amount 
+from shopping_history 
+order by product desc;
+
+--TASK-2
+
+create table phones
+(name varchar(20) not null unique,
+phone_number integer not null unique);
+
+create table calls
+(id integer not null,
+caller integer not null,
+callee integer not null,
+duration integer not null,
+unique(id));
+
+insert into phones values 
+('jack',1234),
+('lena',3333),
+('mark',9999),
+('anna',7582);
+insert into calls values  
+(25,1234,7582,8),
+(7,9999,7582,1),
+(18,9999,3333,4),
+(2,7582,3333,3),
+(3,3333,1234,1),
+(21,3333,1234,1);
+
+SELECT p.name
+FROM phones p
+INNER JOIN calls c ON p.phone_number = c.caller OR p.phone_number = c.callee
+GROUP BY p.name
+HAVING SUM(c.duration) >= 10
+order by name;
+
+--TASk-3
+
+CREATE TABLE transactions (
+Amount INTEGER NOT NULL,
+Date DATE NOT NULL);
+
+INSERT INTO transactions (Amount, Date) VALUES (1000,'2020-01-06');
+INSERT INTO transactions (Amount, Date) VALUES (-10, '2020-01-14');
+INSERT INTO transactions (Amount, Date) VALUES (-75,'2020-01-20');
+INSERT INTO transactions (Amount, Date) VALUES (-5,'2020-01-25');
+INSERT INTO transactions (Amount, Date) VALUES (-4,'2020-01-29');
+INSERT INTO transactions (Amount, Date) VALUES (2000,'2020-03-10');
+INSERT INTO transactions (Amount, Date) VALUES (-75,'2020-03-12');
+INSERT INTO transactions (Amount, Date) VALUES (-20,'2020-03-15');
+INSERT INTO transactions (Amount, Date) VALUES (40,'2020-03-15'); 
+INSERT INTO transactions (Amount, Date) VALUES (-50,'2020-03-17');
+INSERT INTO transactions (Amount, Date) VALUES (200,'2020-10-10'); 
+INSERT INTO transactions (Amount, Date) VALUES (-200,'2020-10-10');
+
+select sum(amount)- 5*
+(12-( select count(*) from
+(SELECT DATE_TRUNC('MONTH',DATE) AS MONTH , count(amount),sum(amount) from 
+transactions where amount<0 
+group by MONTH 
+having Count(amount)>=3 And 
+Sum(amount)<=-100))) as balance
+from transactions ;
+
